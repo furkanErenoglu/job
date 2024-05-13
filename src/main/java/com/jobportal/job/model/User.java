@@ -34,4 +34,7 @@ public class User {
 
     @Column(name = "saved_jobs")
     private String savedJobs;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Network network;
 }
