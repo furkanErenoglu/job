@@ -26,6 +26,6 @@ public class UserPostCommentMapper {
     private List<Comment> comments;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private com.archisacademy.jobportal.model.User user;
+    private User user;
 
 }

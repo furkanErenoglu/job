@@ -1,8 +1,8 @@
-package com.archisacademy.jobportal.model;
+package com.jobportal.job.model;
 
 
 import com.jobportal.job.enums.UserRole;
-import com.jobportal.job.model.Profile;
+import com.jobportal.job.model.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor

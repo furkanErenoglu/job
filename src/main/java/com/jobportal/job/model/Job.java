@@ -37,6 +37,6 @@ public class Job {
     private String description;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private com.archisacademy.jobportal.model.User user;
+    private User user;
 
 }

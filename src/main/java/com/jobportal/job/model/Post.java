@@ -30,7 +30,7 @@ public class Post {
     private Timestamp createdDate;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private com.archisacademy.jobportal.model.User user;
+    private User user;
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 }

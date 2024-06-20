@@ -27,9 +27,9 @@ public class Connection {
     private Timestamp requestDate;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private com.archisacademy.jobportal.model.User user;
+    private User user;
     @ManyToOne
     @JoinColumn(name = "requested_user_id")
-    private com.archisacademy.jobportal.model.User requestedUser;
+    private User requestedUser;
 
 }

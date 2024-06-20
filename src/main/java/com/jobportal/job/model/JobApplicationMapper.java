@@ -20,7 +20,7 @@ public class JobApplicationMapper {
     @Column(name = "id")
     private Long id;
     @ManyToMany(mappedBy = "jobApplications", cascade = CascadeType.ALL)
-    private List<com.archisacademy.jobportal.model.User> users;
+    private List<User> users;
     @OneToOne
     @JoinColumn(name = "job_id")
     private Job job;
