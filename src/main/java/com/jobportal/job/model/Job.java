@@ -1,46 +1,42 @@
 package com.jobportal.job.model;
 
+import com.jobportal.job.enums.LocationType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Table(name = "jobs")
 public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "uuid")
-    private String uuid;
-
+    @Column(name = "company_name")
+    private String companyName;
+    @Column(name = "start_date")
+    private Timestamp startDate;
+    @Column(name = "end_date")
+    private Timestamp endDate;
+    @Column(name = "location")
+    private String location;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "location_type")
+    private LocationType locationType;
+    @Column(name = "position")
+    private String position;
     @Column(name = "description")
     private String description;
-
-    @Column(name = "job_category")
-    private String jobCategory;
-
-    @Column(name = "company_information")
-    private String companyInformation;
-
-    @Column(name = "owner")
-    private String owner;
-
-    @Column(name = "posting_date")
-    private LocalDate postingDate;
-
-    @Column(name = "application_deadline")
-    private LocalDate applicationDeadline;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }
