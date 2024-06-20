@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 @Data
@@ -19,19 +20,17 @@ public class Certificate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "date")
-    private LocalDate date;
-
+    @Column(name = "certificate_name")
+    private String certificateName;
     @Column(name = "company_name")
     private String companyName;
-
+    @Column(name = "posting_date")
+    private Timestamp postingDate;
     @Column(name = "certificate_hours")
-    private int CertificateHours;
+    private int certificateHours;
+    @Column(name = "certificate_url")
+    private String certificateUrl;
+    @ManyToOne
+    @JoinColumn(name = "profile_id", nullable = false)
+    private Profile profile;
 }
