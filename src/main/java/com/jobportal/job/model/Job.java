@@ -1,5 +1,6 @@
 package com.jobportal.job.model;
 
+import com.jobportal.job.enums.LocationType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
