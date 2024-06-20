@@ -1,5 +1,6 @@
 package com.jobportal.job.model;
 
+import com.jobportal.job.enums.ConnectionStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
