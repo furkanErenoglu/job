@@ -20,6 +20,8 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+    @Column(name = "uuid")
+    private String uuid;
     @Column(name = "company_name")
     private String companyName;
     @Column(name = "start_date")
