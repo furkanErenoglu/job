@@ -20,6 +20,8 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+    @Column(name = "uuid")
+    private String uuid;
     @Column(name = "sector")
     private String sector;
     @Column(name = "birth_date")
