@@ -1,7 +1,10 @@
 package com.jobportal.job.exceptions;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
+@SuppressWarnings("serial")
 public class JobPortalServerException extends RuntimeException {
     private static final long serialVersionUID = 62348743L;
 
