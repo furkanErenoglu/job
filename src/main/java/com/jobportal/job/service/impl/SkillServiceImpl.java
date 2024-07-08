@@ -7,6 +7,8 @@ import com.jobportal.job.repository.SkillsRepository;
 import com.jobportal.job.service.SkillService;
 import jakarta.transaction.Transactional;
 
+import java.util.List;
+
 public class SkillServiceImpl implements SkillService {
     private final SkillsRepository skillsRepository;
     private final ProfileRepository profileRepository;
@@ -44,6 +46,11 @@ public class SkillServiceImpl implements SkillService {
     @Override
     public SkillDto getSkill(long skillId) {
         return convertToDto(skillsRepository.findById(skillId).get());
+    }
+
+    @Override
+    public List<SkillDto> searchSkills(String name) {
+        return skillsRepository.findByNameContainingIgnoreCase(name).stream().map(this::convertToDto).toList();
     }
 
     private SkillDto convertToDto(Skills skills) {
