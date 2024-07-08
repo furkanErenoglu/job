@@ -1,5 +1,6 @@
 package com.jobportal.job.loggers;
 
+import com.jobportal.job.exceptions.JobPortalServerException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
