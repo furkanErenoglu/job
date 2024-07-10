@@ -43,7 +43,7 @@ public class SkillServiceImpl implements SkillService {
     @Transactional
     public String deleteSkill(long skillId) {
         skillsRepository.deleteById(skillId);
-        return "Skill deleted successfully";
+        return SkillMassage.SKILL_DELETED + skillId;
     }
 
     @Override
