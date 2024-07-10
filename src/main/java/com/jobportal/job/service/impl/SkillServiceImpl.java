@@ -2,6 +2,7 @@ package com.jobportal.job.service.impl;
 
 import com.jobportal.job.dtos.SkillDto;
 import com.jobportal.job.loggers.MainLogger;
+import com.jobportal.job.loggers.messages.SkillMassage;
 import com.jobportal.job.model.Skills;
 import com.jobportal.job.repository.ProfileRepository;
 import com.jobportal.job.repository.SkillsRepository;
@@ -26,7 +27,7 @@ public class SkillServiceImpl implements SkillService {
         Skills skills = convertToEntity(skillDto);
         skills.setProfile(profileRepository.findById(Long.parseLong(skillDto.getProfileId())).orElseThrow());
         skillsRepository.save(skills);
-        return ;
+        return SkillMassage.SKILL_CREATED + skills.getId();
     }
 
     @Override
