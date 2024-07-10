@@ -36,7 +36,7 @@ public class SkillServiceImpl implements SkillService {
         Skills existingSkill = skillsRepository.findById(Long.parseLong(skillDto.getProfileId())).get();
         existingSkill.setName(skillDto.getName());
         existingSkill.setDescription(skillDto.getDescription());
-        return "Skill updated successfully";
+        return SkillMassage.SKILL_UPDATED + existingSkill.getId();
     }
 
     @Override
