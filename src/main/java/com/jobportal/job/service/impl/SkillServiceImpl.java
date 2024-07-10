@@ -25,7 +25,12 @@ public class SkillServiceImpl implements SkillService {
     @Transactional
     public String createSkill(SkillDto skillDto) {
         Skills skills = convertToEntity(skillDto);
-        skills.setProfile(profileRepository.findById(Long.parseLong(skillDto.getProfileId())).orElseThrow());
+        skills.setProfile(profileRepository.findById(Long.parseLong(skillDto.getProfileId())).orElseThrow(
+                () -> {
+                    LOGGER.log(SkillMassage.SKIILS_NOT_FOUND + skillDto.getProfileId(), null);
+                    return null;
+                }
+        ));
         skillsRepository.save(skills);
         return SkillMassage.SKILL_CREATED + skills.getId();
     }
