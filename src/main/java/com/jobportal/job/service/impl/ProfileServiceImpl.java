@@ -2,6 +2,7 @@ package com.jobportal.job.service.impl;
 
 import com.jobportal.job.dtos.ProfileDto;
 import com.jobportal.job.loggers.MainLogger;
+import com.jobportal.job.loggers.messages.ProfilesMessage;
 import com.jobportal.job.model.Profile;
 import com.jobportal.job.repository.ProfileRepository;
 import com.jobportal.job.repository.UserRepository;
@@ -10,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +29,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     @Transactional
     public String createProfile(ProfileDto profileDto) {
-        Profile profileEntity = profileMapper.toEntity(profileDto);
+        Profile profileEntity = toEntity(profileDto);
         profileEntity.setUser(userRepository.findById(profileDto.getUserId()).orElseThrow(
                         () -> {
                             LOGGER.log(UserMessage.USER_NOT_FOUND + profileDto.getUserId(), HttpStatus.NOT_FOUND);
@@ -67,7 +69,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public List<ProfileDto> getAllProfiles() {
-        return profileRepository.findAll().stream().map(profileMapper::toDto).collect(Collectors.toList());
+        return profileRepository.findAll().stream().map(this::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -78,7 +80,7 @@ public class ProfileServiceImpl implements ProfileService {
                     return null;
                 }
         );
-        return profileMapper.toDto(profile);
+        return toDto(profile);
     }
 
     protected Profile getProfileEntityById(Long id) {
@@ -88,6 +90,21 @@ public class ProfileServiceImpl implements ProfileService {
                     return null;
                 }
         );
+    }
+    private Profile toEntity(ProfileDto profileDto) {
+        return Profile.builder()
+                .sector(profileDto.getSector())
+                .birthDate(new Timestamp(System.currentTimeMillis()))
+                .summary(profileDto.getSummary())
+                .build();
+    }
+
+    private ProfileDto toDto(Profile profile) {
+        return ProfileDto.builder()
+                .sector(profile.getSector())
+                .birthDate(profile.getBirthDate())
+                .summary(profile.getSummary())
+                .build();
     }
 
 }
