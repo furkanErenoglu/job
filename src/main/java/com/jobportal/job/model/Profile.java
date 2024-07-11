@@ -20,8 +20,6 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "uuid")
-    private String uuid;
     @Column(name = "sector")
     private String sector;
     @Column(name = "birth_date")
@@ -38,5 +36,8 @@ public class Profile {
     private List<Education> educations;
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Project> projects;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }
