@@ -3,6 +3,7 @@ package com.jobportal.job.service.impl;
 import com.jobportal.job.dtos.ProfileDto;
 import com.jobportal.job.loggers.MainLogger;
 import com.jobportal.job.loggers.messages.ProfilesMessage;
+import com.jobportal.job.loggers.messages.UserMessage;
 import com.jobportal.job.model.Profile;
 import com.jobportal.job.repository.ProfileRepository;
 import com.jobportal.job.repository.UserRepository;
