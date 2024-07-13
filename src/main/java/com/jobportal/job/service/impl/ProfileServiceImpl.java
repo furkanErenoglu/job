@@ -84,7 +84,7 @@ public class ProfileServiceImpl implements ProfileService {
         return toDto(profile);
     }
 
-    protected Profile getProfileEntityById(Long id) {
+    public Profile getProfileEntityById(Long id) {
         return profileRepository.findById(id).orElseThrow(
                 () -> {
                     LOGGER.log(ProfilesMessage.PROFILE_NOT_FOUND + id, HttpStatus.NOT_FOUND);
