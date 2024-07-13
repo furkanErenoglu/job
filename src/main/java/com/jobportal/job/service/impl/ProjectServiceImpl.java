@@ -24,6 +24,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public String createProject(ProjectDto project) {
+        Project projectEntity = convertToEntity(project);
+        projectEntity.setProfile(profileService.get(project.getProfileId()));
         return null;
     }
 
