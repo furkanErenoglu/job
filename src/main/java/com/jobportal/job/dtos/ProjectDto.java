@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ProjectDto {
+    private Long id;
     private String projectName;
     private Timestamp startDate;
     private Timestamp endDate;

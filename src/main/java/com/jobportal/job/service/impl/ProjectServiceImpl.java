@@ -2,14 +2,18 @@ package com.jobportal.job.service.impl;
 
 import com.jobportal.job.dtos.ProjectDto;
 import com.jobportal.job.loggers.MainLogger;
+import com.jobportal.job.loggers.messages.ProjectMessage;
 import com.jobportal.job.model.Project;
 import com.jobportal.job.repository.ProjectRepository;
 import com.jobportal.job.service.ProfileService;
 import com.jobportal.job.service.ProjectService;
+import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -23,37 +27,66 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    @Transactional
     public String createProject(ProjectDto project) {
         Project projectEntity = convertToEntity(project);
         projectEntity.setProfile(profileService.getProfileEntityById(project.getProfileId()));
         projectRepository.save(projectEntity);
-        return null;
+        return ProjectMessage.PROJECT_CREATED_SUCCESS;
     }
 
     @Override
+    @Transactional
     public String deleteProject(Long id) {
-        return null;
+        Project project = projectRepository.findById(id)
+                .orElseThrow(() -> {
+                    LOGGER.log(ProjectMessage.PROJECT_NOT_FOUND + id, HttpStatus.NOT_FOUND);
+                    return null;
+                });
+
+        projectRepository.deleteById(id);
+
+        return ProjectMessage.PROJECT_DELETED_SUCCESS;
     }
 
     @Override
+    @Transactional
     public String updateProject(ProjectDto project) {
-        return null;
+        Project existingProject = projectRepository.findById(project.getId())
+                .orElseThrow(() -> {
+                    LOGGER.log(ProjectMessage.PROJECT_NOT_FOUND + project.getId(), HttpStatus.NOT_FOUND);
+                    return null;
+                });
+
+        existingProject.setStartDate(project.getStartDate());
+        existingProject.setEndDate(project.getEndDate());
+        existingProject.setPosition(project.getPosition());
+        existingProject.setUrl(project.getUrl());
+        existingProject.setTechnologies(project.getTechnologies().get(0));
+        existingProject.setDescription(project.getDescription());
+
+        projectRepository.save(existingProject);
+
+        return ProjectMessage.PROJECT_UPDATED_SUCCESS;
     }
 
     @Override
     public List<ProjectDto> getAllProjects() {
-        return null;
+        return projectRepository.findAll().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public ProjectDto getProjectById(Long id) {
-        return null;
+        Project project = projectRepository.findById(id)
+                .orElseThrow(() -> {
+                    LOGGER.log(ProjectMessage.PROJECT_NOT_FOUND + id, HttpStatus.NOT_FOUND);
+                    return null;
+                });
+        return convertToDto(project);
     }
 
-    @Override
-    public Project getProjectEntityById(Long id) {
-        return null;
-    }
 
     private ProjectDto convertToDto(Project project) {
         return ProjectDto.builder()

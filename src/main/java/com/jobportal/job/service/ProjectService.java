@@ -11,5 +11,4 @@ public interface ProjectService {
     String updateProject(ProjectDto project);
     List<ProjectDto> getAllProjects();
     ProjectDto getProjectById(Long id);
-    Project getProjectEntityById(Long id);
 }
