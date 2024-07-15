@@ -3,10 +3,13 @@ package com.jobportal.job.service.impl;
 import com.jobportal.job.dtos.ExperienceDto;
 import com.jobportal.job.enums.LocationType;
 import com.jobportal.job.loggers.MainLogger;
+import com.jobportal.job.loggers.messages.ExperienceMessage;
 import com.jobportal.job.model.Experience;
 import com.jobportal.job.repository.ExperienceRepository;
 import com.jobportal.job.repository.ProfileRepository;
 import com.jobportal.job.service.ExperienceService;
+import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -24,18 +27,56 @@ public class ExperienceServiceImpl implements ExperienceService {
     }
 
     @Override
-    public String createExperience(ExperienceDto experience) {
-        return null;
+    @Transactional
+    public String createExperience(ExperienceDto experienceDto) {
+        if (experienceDto.getStartDate().after(experienceDto.getEndDate())) {
+            LOGGER.log(ExperienceMessage.END_DATE_BEFORE_START_DATE, HttpStatus.BAD_REQUEST);
+        }
+        Experience experience = convertToEntity(experienceDto);
+        experience.setProfile(profileRepository.findById(experienceDto.getProfileId())
+                .orElseThrow(() -> {
+                    LOGGER.log(ExperienceMessage.PROFILE_NOT_FOUND + experienceDto.getProfileId(), HttpStatus.NOT_FOUND);
+                    return null;
+                }));
+        experienceRepository.save(experience);
+        return ExperienceMessage.EXPERIENCE_CREATED_SUCCESS;
     }
 
     @Override
+    @Transactional
     public String deleteExperience(Long id) {
-        return null;
+        Experience experience = experienceRepository.findById(id)
+                .orElseThrow(() -> {
+                    LOGGER.log(ExperienceMessage.EXPERIENCE_NOT_FOUND + id, HttpStatus.NOT_FOUND);
+                    return null;
+                });
+
+        experienceRepository.deleteById(id);
+
+        LOGGER.log(String.format(ExperienceMessage.EXPERIENCE_DELETED_LOG, id));
+        return ExperienceMessage.EXPERIENCE_DELETED_SUCCESS;
     }
 
     @Override
-    public String updateExperience(ExperienceDto experience) {
-        return null;
+    @Transactional
+    public String updateExperience(ExperienceDto experienceDto) {
+        Experience existingExperience = experienceRepository.findById(experienceDto.getId())
+                .orElseThrow(() -> {
+                    LOGGER.log(ExperienceMessage.EXPERIENCE_NOT_FOUND + experienceDto.getId(), HttpStatus.NOT_FOUND);
+                    return null;
+                });
+
+        existingExperience.setCompanyName(experienceDto.getCompanyName());
+        existingExperience.setActive(experienceDto.isActive());
+        existingExperience.setStartDate(new Timestamp(System.currentTimeMillis()));
+        existingExperience.setEndDate(new Timestamp(System.currentTimeMillis()));
+        existingExperience.setLocation(experienceDto.getLocation());
+        existingExperience.setLocationType(stringToLocationType(experienceDto.getLocationType()));
+        existingExperience.setPosition(experienceDto.getPosition());
+        existingExperience.setDescription(experienceDto.getDescription());
+
+        experienceRepository.save(existingExperience);
+        return ExperienceMessage.EXPERIENCE_UPDATED_SUCCESS;
     }
 
     @Override
