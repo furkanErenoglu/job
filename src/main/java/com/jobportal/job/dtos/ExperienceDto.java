@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public class ExperienceDto {
+    private Long id;
     private String companyName;
     private boolean isActive;
     private Timestamp startDate;
