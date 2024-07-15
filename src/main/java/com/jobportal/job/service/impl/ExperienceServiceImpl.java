@@ -9,10 +9,15 @@ import com.jobportal.job.repository.ExperienceRepository;
 import com.jobportal.job.repository.ProfileRepository;
 import com.jobportal.job.service.ExperienceService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.System.currentTimeMillis;
 
@@ -80,13 +85,23 @@ public class ExperienceServiceImpl implements ExperienceService {
     }
 
     @Override
-    public List<ExperienceDto> getAllExperiences() {
-        return null;
+    public Page<ExperienceDto> getAllExperiences(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Experience> experiences = experienceRepository.findAll(pageable);
+        List<ExperienceDto> experienceDtoList = experiences.getContent().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+        return new PageImpl<>(experienceDtoList, pageable, experiences.getTotalElements());
     }
 
     @Override
     public ExperienceDto getExperienceById(Long id) {
-        return null;
+        Experience experience = experienceRepository.findById(id)
+                .orElseThrow(() -> {
+                    LOGGER.log(ExperienceMessage.EXPERIENCE_NOT_FOUND + id, HttpStatus.NOT_FOUND);
+                    return null;
+                });
+        return convertToDto(experience);
     }
 
     private ExperienceDto convertToDto(Experience experience) {
