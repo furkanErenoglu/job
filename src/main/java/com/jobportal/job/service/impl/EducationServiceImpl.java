@@ -8,9 +8,16 @@ import com.jobportal.job.model.Profile;
 import com.jobportal.job.repository.EducationRepository;
 import com.jobportal.job.service.EducationService;
 import com.jobportal.job.service.ProfileService;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EducationServiceImpl implements EducationService {
@@ -24,6 +31,7 @@ public class EducationServiceImpl implements EducationService {
     }
 
     @Override
+    @Transactional
     public String createEducation(EducationDto educationDto) {
         if (educationDto.getStartDate().after(educationDto.getGraduationDate())) {
             LOGGER.log(EducationMessage.GRADUATION_DATE_BEFORE_START_DATE, HttpStatus.BAD_REQUEST);
@@ -36,23 +44,53 @@ public class EducationServiceImpl implements EducationService {
     }
 
     @Override
+    @Transactional
     public String deleteEducation(Long id) {
-        return null;
+        if (!educationRepository.existsById(id)) {
+            LOGGER.log(EducationMessage.EDUCATION_NOT_FOUND + id, HttpStatus.NOT_FOUND);
+            return null;
+        }
+        educationRepository.deleteById(id);
+        return EducationMessage.EDUCATION_DELETED_SUCCESS;
     }
 
     @Override
+    @Transactional
     public String updateEducation(long educationId, EducationDto educationDto) {
-        return null;
+        Education existingEducation = educationRepository.findById(educationId)
+                .orElseThrow(() -> {
+                    LOGGER.log(EducationMessage.EDUCATION_NOT_FOUND + educationId, HttpStatus.NOT_FOUND);
+                    return null;
+                });
+
+        existingEducation.setUniversity(educationDto.getUniversity());
+        existingEducation.setDepartment(educationDto.getDepartment());
+        existingEducation.setGraduationDate(educationDto.getGraduationDate());
+        existingEducation.setDescription(educationDto.getDescription());
+        existingEducation.setStartDate(educationDto.getStartDate());
+
+        educationRepository.save(existingEducation);
+        return EducationMessage.EDUCATION_UPDATED_SUCCESS;
     }
 
     @Override
     public Page<EducationDto> getAllEducations(int pageNo, int pageSize) {
-        return null;
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Education> educations = educationRepository.findAll(pageable);
+        List<EducationDto> educationDtoList = educations.getContent().stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+        return new PageImpl<>(educationDtoList, pageable, educations.getTotalElements());
     }
 
     @Override
     public EducationDto getEducationsById(Long id) {
-        return null;
+        Education education = educationRepository.findById(id)
+                .orElseThrow(() -> {
+                    LOGGER.log(EducationMessage.EDUCATION_NOT_FOUND + id, HttpStatus.NOT_FOUND);
+                    return null;
+                });
+        return toDto(education);
     }
 
     private Education toEntity(EducationDto educationDto) {
