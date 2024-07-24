@@ -31,11 +31,7 @@ public class UserServiceİmpl implements UserService {
 
     @Override
     public String updateUser(UserDto userDto) {
-        User user = userRepository.findByUuid(userDto.getUuid())
-                .orElseThrow(() -> {
-                    LOGGER.log(UserMessage.USER_NOT_FOUND + userDto.getUuid(), HttpStatus.NOT_FOUND);
-                    return null;
-                });
+        User user = checkToUser(userDto.getUuid());
         user.setFullName(userDto.getFullName());
         user.setEmail(userDto.getEmail());
         user.setTelephone(userDto.getTelephone());
@@ -47,28 +43,22 @@ public class UserServiceİmpl implements UserService {
 
     @Override
     public String deleteUser(String uuid) {
-        User user = userRepository.findByUuid(uuid)
-                .orElseThrow(() -> {
-                    LOGGER.log(UserMessage.USER_NOT_FOUND + uuid, HttpStatus.NOT_FOUND);
-                    return null;
-                });
+        User user = checkToUser(uuid);
         userRepository.delete(user);
         return UserMessage.USER_DELETED_SUCCESS;
     }
 
     @Override
     public UserDto getUserByUuid(String uuid) {
-        User user = userRepository.findByUuid(uuid)
-                .orElseThrow(() -> {
-                    LOGGER.log(UserMessage.USER_NOT_FOUND + uuid, HttpStatus.NOT_FOUND);
-                    return null;
-                });
+        User user = checkToUser(uuid);
         return convertToDto(user);
     }
 
     @Override
     public List<UserDto> getAllUsers() {
-        return null;
+        return userRepository.findAll().stream()
+                .map(this::convertToDto)
+                .toList();
     }
 
     private UserDto convertToDto(User user) {
@@ -91,6 +81,14 @@ public class UserServiceİmpl implements UserService {
                 .address(userDto.getAddress())
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .build();
+    }
+
+    private User checkToUser(String uuid) {
+        return userRepository.findByUuid(uuid)
+                .orElseThrow(() -> {
+                    LOGGER.log(UserMessage.USER_NOT_FOUND + uuid, HttpStatus.NOT_FOUND);
+                    return null;
+                });
     }
 }
 
