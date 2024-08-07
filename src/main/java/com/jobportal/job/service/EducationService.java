@@ -1,5 +1,8 @@
 package com.jobportal.job.service;
 
+import com.jobportal.job.dtos.EducationDto;
+import org.springframework.data.domain.Page;
+
 public interface EducationService {
     String createEducation(EducationDto educationDto);
 
