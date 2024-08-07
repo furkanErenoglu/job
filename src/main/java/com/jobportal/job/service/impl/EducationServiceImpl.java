@@ -76,6 +76,7 @@ public class EducationServiceImpl implements EducationService {
     @Override
     public Page<EducationDto> getAllEducations(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
+
         Page<Education> educations = educationRepository.findAll(pageable);
         List<EducationDto> educationDtoList = educations.getContent().stream()
                 .map(this::toDto)
@@ -93,22 +94,24 @@ public class EducationServiceImpl implements EducationService {
         return toDto(education);
     }
 
-    private Education toEntity(EducationDto educationDto) {
-        if (educationDto == null) {
+    private EducationDto toDto(Education education) {
+        if (education == null) {
             return null;
         }
 
-        Profile profile = Profile.builder().id(educationDto.getProfileId()).build();
-
-        return Education.builder()
-                .university(educationDto.getUniversity())
-                .department(educationDto.getDepartment())
-                .graduationDate(educationDto.getGraduationDate())
-                .description(educationDto.getDescription())
-                .startDate(educationDto.getStartDate())
-                .profile(profile)
+        return EducationDto.builder()
+                .university(education.getUniversity())
+                .department(education.getDepartment())
+                .graduationDate(education.getGraduationDate())
+                .description(education.getDescription())
+                .startDate(education.getStartDate())
+                .profileId(education.getProfile().getId())
                 .build();
     }
+
+   
+
+ 
 
     private EducationDto toDto(Education education) {
         if (education == null) {
@@ -124,4 +127,5 @@ public class EducationServiceImpl implements EducationService {
                 .profileId(education.getProfile().getId())
                 .build();
     }
+
 }

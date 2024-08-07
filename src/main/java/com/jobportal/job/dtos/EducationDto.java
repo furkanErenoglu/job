@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
-@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class EducationDto {
     private String university;
     private String department;
