@@ -1,5 +1,8 @@
 package com.jobportal.job.service;
 
+import com.jobportal.job.dtos.CommentDto;
+import org.springframework.data.domain.Page;
+
 public interface CommentService {
     String createComment(CommentDto commentDto);
 
