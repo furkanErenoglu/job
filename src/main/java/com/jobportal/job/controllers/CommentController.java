@@ -32,5 +32,5 @@ public class CommentController {
     public CommentDto getComment(@PathVariable long commentId) {
         return commentService.getCommentById(commentId);
     }
-    
+
 }
