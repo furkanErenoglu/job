@@ -8,9 +8,11 @@ import com.jobportal.job.repository.ProfileRepository;
 import com.jobportal.job.repository.SkillsRepository;
 import com.jobportal.job.service.SkillService;
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class SkillServiceImpl implements SkillService {
     private final SkillsRepository skillsRepository;
     private final ProfileRepository profileRepository;

@@ -9,10 +9,12 @@ import com.jobportal.job.repository.UserRepository;
 import com.jobportal.job.service.ProfileService;
 import com.jobportal.job.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+@Service
 public class UserServiceİmpl implements UserService {
     private final UserRepository userRepository;
     private final static MainLogger LOGGER = new MainLogger(UserServiceİmpl.class);
